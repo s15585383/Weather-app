@@ -1,19 +1,42 @@
-const searchFormEl = document.querySelector('#search-form');
+const apiKey = "YOUR_API_KEY"; // Replace with your OpenWeatherMap API key
+const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
 
-function handleSearchFormSubmit(event) {
-  event.preventDefault();
+const searchInput = document.getElementById("city-search");
+const searchButton = document.getElementById("search-button");
 
-  const searchInputVal = document.querySelector('#search-input').value;
-  const formatInputVal = document.querySelector('#format-input').value;
-
-  if (!searchInputVal) {
-    console.error('You need a search input value!');
-    return;
+searchButton.addEventListener("click", () => {
+  const cityName = searchInput.value.trim();
+  if (cityName) {
+    fetchWeatherData(cityName);
   }
+});
 
-  const queryString = `./search-results.html?q=${searchInputVal}&format=${formatInputVal}`;
+function fetchWeatherData(cityName) {
+  const url = `${baseUrl}?q=${cityName}&appid=${apiKey}&units=imperial`; // Using imperial units (Fahrenheit)
 
-  location.assign(queryString);
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => displayWeatherData(data))
+    .catch((error) => console.error(error));
 }
 
-searchFormEl.addEventListener('submit', handleSearchFormSubmit);
+function displayWeatherData(weatherData) {
+  const cityName = weatherData.name;
+  const date = new Date(weatherData.dt * 1000).toLocaleDateString();
+  const weatherIcon = `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`;
+  const temperature = Math.floor(weatherData.main.temp);
+  const humidity = weatherData.main.humidity;
+  const windSpeed = weatherData.wind.speed;
+
+  // Update HTML elements with weather information
+  document.getElementById("city-name").textContent = cityName;
+  document.getElementById("date").textContent = date;
+  document.getElementById("weather-icon").src = weatherIcon;
+  document.getElementById("temperature").textContent = `${temperature}°F`;
+  document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
+  document.getElementById(
+    "wind-speed"
+  ).textContent = `Wind Speed: ${windSpeed} mph`;
+
+  // Implement search history logic here (optional)
+}
