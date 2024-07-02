@@ -1,47 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Results | Library of Congress Search</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400&family=Merriweather:wght@700&display=swap"
-    rel="stylesheet" />
-    <link rel="stylesheet" href="./assets/css/jass.css" />
-    <link rel="stylesheet" href="./assets/css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-  <div class="flex-row align-start align-stretch-md align-content-start align-content-stretch-md min-100-vh bg-primary">
-    <div class="col-12 col-md-3 bg-light p-3">
-      <h1 class="text-primary">Search for a City</h1>
-      <form id="search-form" class="mb-2">
-        <input id="search-input" class="form-input w-100" type="text" placeholder="Search!">
-        <select id="format-input" class="form-input w-100">
-          <option value="" disabled selected>Select a format...</option>
-          <option value="maps">Maps</option>
-          <option value="audio">Audio</option>
-          <option value="photos">Photos</option>
-          <option value="manuscripts">Manuscripts</option>
-          <option value="newspapers">Newspapers</option>
-          <option value="film-and-videos">Film and Videos</option>
-          <option value="notated-music">Notated Music</option>
-          <option value="websites">Websites</option>
-        </select>
-        <button class="btn btn-info btn-block">Search</button>
-      </form>
-
-      <a href="./index.html" class="btn btn-block btn-danger">&larr; Go back.</a>
-    </div>
-
-    <div class="col-12 col-md-9 p-3 text-light">
-      <h2>Showing results for <span id="result-text"></span></h2>
-      <div id="result-content"></div>
-    </div>
-  </div>
-
-  <script src="./assets/js/display-search.js"></script>
+  <header>
+    <h1>Weather Dashboard</h1>
+  </header>
+  <main>
+    <section class="search-bar">
+      <input type="text" id="city-search" placeholder="Enter City Name">
+      <button id="search-button">Search</button>
+    </section>
+    <section class="current-weather">
+      <h2>Current Weather</h2>
+      <div class="weather-info">
+        <h3 id="city-name"></h3>
+        <p id="date"></p>
+        <img id="weather-icon" alt="Weather Icon" src=""> <p id="temperature"></p>
+        <p id="humidity"></p>
+        <p id="wind-speed"></p>
+      </div>
+    </section>
+    <section class="forecast">
+      <h2>5-Day Forecast</h2>
+      <ul id="forecast-list">
+        </ul>
+    </section>
+    <section class="search-history">
+      <h2>Search History</h2>
+      <ul id="search-history-list">
+        </ul>
+    </section>
+  </main>
+  <script src="script.js"></script>
 </body>
-
 </html>
