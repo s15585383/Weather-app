@@ -1,4 +1,4 @@
-const apiKey = "YOUR_API_KEY"; // Replace with your OpenWeatherMap API key
+const apiKey = "2c4302b98fb4d16a55d7c64a8f3f04d3";
 const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
 
 const searchInput = document.getElementById("city-search");
@@ -37,6 +37,4 @@ function displayWeatherData(weatherData) {
   document.getElementById(
     "wind-speed"
   ).textContent = `Wind Speed: ${windSpeed} mph`;
-
-  // Implement search history logic here (optional)
 }
