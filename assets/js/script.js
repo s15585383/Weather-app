@@ -1,18 +1,42 @@
 const apiKey = "2c4302b98fb4d16a55d7c64a8f3f04d3";
 const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
+const geocodingApiUrl = "https://api.openweathermap.org/geo/1.1/q";
 
 const searchInput = document.getElementById("city-search");
 const searchButton = document.getElementById("search-button");
 
-searchButton.addEventListener("click", () => {
+function geocodeCity(cityName, countryCode = "") {
+  const url = `${geocodingApiUrl}?q=${cityName}${
+    countryCode ? `,${countryCode}` : ""
+  }&appid=${apiKey}`;
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.cod === "200") {
+        // Success response
+        const coordinates = data.coords; // Extract coordinates (latitude & longitude)
+        fetchWeatherData(coordinates.lat, coordinates.lon); // Call weather data fetch function with coordinates
+      } else {
+        console.error("Geocoding error:", data.message); // Handle geocoding errors
+      }
+    })
+    .catch((error) => console.error("Geocoding API error:", error));
+}
+
+searchButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
   const cityName = searchInput.value.trim();
-  if (cityName) {
-    fetchWeatherData(cityName);
-  }
+  const countryCode =
+    document.getElementById("country-code").value.toUpperCase() || ""; // Optional country code input
+
+  geocodeCity(cityName, countryCode);
 });
 
-function fetchWeatherData(cityName) {
-  const url = `${baseUrl}?q=${cityName}&appid=${apiKey}&units=imperial`; // Using imperial units (Fahrenheit)
+function fetchWeatherData(lat, lon) {
+  const weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather";
+  const url = `${weatherApiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`; // Using imperial units (Fahrenheit)
 
   fetch(url)
     .then((response) => response.json())
