@@ -1,5 +1,6 @@
-const apiKey = "2c4302b98fb4d16a55d7c64a8f3f04d3";
-const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
+const apiKey = "bfbd4cc44a5e7d0b7b18e693777f0e45";
+const baseUrl =
+  "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}";
 
 const searchCityInput = $("#city-search"); // Select the search input element
 const searchCityBtn = $("#search-btn"); // Select the search button element
@@ -86,6 +87,8 @@ const getForecast = (lat, lon) => {
     .catch((error) => console.error("Error fetching forecast data:", error));
 };
 const displayForecast = (forecastData) => {
+  console.log("Forecast Data:", forecastData); // Check the forecast data received
+
   $("#forecast-cards").empty(); // Clear existing forecast cards
 
   forecastData.forEach((day) => {
@@ -111,6 +114,6 @@ const displayForecast = (forecastData) => {
       </div>
     `);
 
-    $("#forecast-cards").append(forecastCard);
+    $("#forecast-cards").append(forecastCard); // Append each forecast card to the forecast-cards element
   });
 };
