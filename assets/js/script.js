@@ -1,73 +1,8 @@
-// const apiKey = "2c4302b98fb4d16a55d7c64a8f3f04d3";
-// const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
-// const geocodingApiUrl = "https://api.openweathermap.org/geo/1.1/q";
-
-// const searchInput = document.getElementById("city-search");
-// const searchButton = document.getElementById("search-button");
-
-// function geocodeCity(cityName, countryCode = "") {
-//   const url = `${geocodingApiUrl}?q=${cityName}${
-//     countryCode ? `,${countryCode}` : ""
-//   }&appid=${apiKey}`;
-
-//   fetch(url)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       if (data.cod === "200") {
-//         // Success response
-//         const coordinates = data.coords; // Extract coordinates (latitude & longitude)
-//         fetchWeatherData(coordinates.lat, coordinates.lon); // Call weather data fetch function with coordinates
-//       } else {
-//         console.error("Geocoding error:", data.message); // Handle geocoding errors
-//       }
-//     })
-//     .catch((error) => console.error("Geocoding API error:", error));
-// }
-
-// searchButton.addEventListener("click", (event) => {
-//   event.preventDefault();
-
-//   const cityName = searchInput.value.trim();
-//   const countryCode =
-//     document.getElementById("country-code").value.toUpperCase() || ""; // Optional country code input
-
-//   geocodeCity(cityName, countryCode);
-// });
-
-// function fetchWeatherData(lat, lon) {
-//   const weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather";
-//   const url = `${weatherApiUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`; // Using imperial units (Fahrenheit)
-
-//   fetch(url)
-//     .then((response) => response.json())
-//     .then((data) => displayWeatherData(data))
-//     .catch((error) => console.error(error));
-// }
-
-// function displayWeatherData(weatherData) {
-//   const cityName = weatherData.name;
-//   const date = new Date(weatherData.dt * 1000).toLocaleDateString();
-//   const weatherIcon = `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`;
-//   const temperature = Math.floor(weatherData.main.temp);
-//   const humidity = weatherData.main.humidity;
-//   const windSpeed = weatherData.wind.speed;
-
-//   // Update HTML elements with weather information
-//   document.getElementById("city-name").textContent = cityName;
-//   document.getElementById("date").textContent = date;
-//   document.getElementById("weather-icon").src = weatherIcon;
-//   document.getElementById("temperature").textContent = `${temperature}°F`;
-//   document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
-//   document.getElementById(
-//     "wind-speed"
-//   ).textContent = `Wind Speed: ${windSpeed} mph`;
-// }
-// const apiKey = "2c4302b98fb4d16a55d7c64a8f3f04d3";
 const apiKey = "2c4302b98fb4d16a55d7c64a8f3f04d3";
 const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
 
-const searchInput = $("#city-search"); // Select the search input element
-const searchButton = $("#search-button"); // Select the search button element
+const searchCityInput = $("#city-search"); // Select the search input element
+const searchCityBtn = $("#search-btn"); // Select the search button element
 const cityNameElement = $("#city-name"); // Select the element for displaying city name
 const currentDateElement = $("#current-date"); // Select the element for displaying current date
 const temperatureElement = $("#temperature"); // Select the element for displaying temperature
@@ -76,25 +11,33 @@ const humidityElement = $("#humidity"); // Select the element for displaying hum
 const forecastCardsElement = $("#forecast-cards"); // Select the element for displaying forecast cards
 
 const searchCity = () => {
-  const cityName = searchInput.val().trim(); // Get trimmed city name from input
+  const cityName = searchCityInput.val().trim();
   if (!cityName) {
     alert("Please enter a city name");
     return;
   }
 
   fetch(`${baseUrl}?q=${cityName}&appid=${apiKey}`)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.cod === "404") {
-        alert("City not found. Please try again.");
-        return;
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("City not found. Please try again.");
       }
+      return response.json();
+    })
+    .then((data) => {
       updateCurrentWeather(data);
       storeSearchedCity(cityName);
       getForecast(data.coord.lat, data.coord.lon);
     })
     .catch((error) => console.error("Error fetching weather data:", error));
 };
+
+searchCityBtn.on("click", (event) => {
+  event.preventDefault();
+
+  const cityName = searchCityInput.val().trim();
+  searchCity(cityName);
+});
 
 const updateCurrentWeather = (data) => {
   cityNameElement.text(data.name);
@@ -171,13 +114,3 @@ const displayForecast = (forecastData) => {
     $("#forecast-cards").append(forecastCard);
   });
 };
-
-searchButton.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const cityName = searchInput.value.trim();
-  const countryCode =
-    document.getElementById("country-code").value.toUpperCase() || "";
-
-  geocodeCity(cityName, countryCode);
-});
