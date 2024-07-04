@@ -76,15 +76,13 @@ const humidityElement = $("#humidity"); // Select the element for displaying hum
 const forecastCardsElement = $("#forecast-cards"); // Select the element for displaying forecast cards
 
 const searchCity = () => {
-  const cityName = $("#city-search").val().trim(); // Get trimmed city name from input
+  const cityName = searchInput.val().trim(); // Get trimmed city name from input
   if (!cityName) {
     alert("Please enter a city name");
     return;
   }
 
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=<span class="math-inline">\{cityName\}&appid\=</span>{apiKey}`
-  )
+  fetch(`${baseUrl}?q=${cityName}&appid=${apiKey}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.cod === "404") {
@@ -99,17 +97,13 @@ const searchCity = () => {
 };
 
 const updateCurrentWeather = (data) => {
-  const cityName = data.name;
-  const date = new Date(data.dt * 1000).toLocaleDateString();
-  const temperature = Math.floor(data.main.temp - 273.15); // Convert Kelvin to Celsius
-  const windSpeed = data.wind.speed; // Wind speed in m/s
-  const humidity = data.main.humidity;
-
-  $("#city-name").text(cityName);
-  $("#current-date").text(date);
-  $("#temperature").text(`Temperature: ${temperature}°C`);
-  $("#wind").text(`Wind Speed: ${windSpeed} m/s`);
-  $("#humidity").text(`Humidity: ${humidity}%`);
+  cityNameElement.text(data.name);
+  currentDateElement.text(new Date(data.dt * 1000).toLocaleDateString());
+  temperatureElement.text(
+    `Temperature: ${Math.floor(data.main.temp - 273.15)}°C`
+  );
+  windElement.text(`Wind Speed: ${data.wind.speed} m/s`);
+  humidityElement.text(`Humidity: ${data.main.humidity}%`);
 };
 
 const storeSearchedCity = (cityName) => {
@@ -177,3 +171,13 @@ const displayForecast = (forecastData) => {
     $("#forecast-cards").append(forecastCard);
   });
 };
+
+searchButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  const cityName = searchInput.value.trim();
+  const countryCode =
+    document.getElementById("country-code").value.toUpperCase() || "";
+
+  geocodeCity(cityName, countryCode);
+});
