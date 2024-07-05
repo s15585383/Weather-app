@@ -1,6 +1,5 @@
-const baseUrl =
-  "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}";
 const apiKey = "16d312da0b595bc0e8794d97eaaf3c2a";
+const baseUrl = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}`;
 
 const searchCityInput = $("#city-search"); // Select the search input element
 const searchCityBtn = $("#search-btn"); // Select the search button element
