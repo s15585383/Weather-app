@@ -1,6 +1,6 @@
 const apiKey = "bfbd4cc44a5e7d0b7b18e693777f0e45";
 const baseUrl =
-  "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}";
+  "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}";
 
 const searchCityInput = $("#city-search"); // Select the search input element
 const searchCityBtn = $("#search-btn"); // Select the search button element
@@ -81,10 +81,17 @@ const displaySearchedCities = () => {
     const listItem = $("<li>").addClass("list-group-item").text(city);
     listItem.click(() => {
       $("#city-search").val(city); // Pre-fill input with clicked city
-      searchCity();
+      searchCity(); // Call the function to search for the clicked city
     });
     $("#searched-cities").append(listItem);
   });
+};
+
+const addCityToSearchHistory = (cityName) => {
+  addCityToSearchHistory("Paris");
+  addCityToSearchHistory("London");
+  addCityToSearchHistory("New York");
+  storeSearchedCity(cityName);
 };
 
 const getForecast = (lat, lon) => {
@@ -129,3 +136,37 @@ const displayForecast = (forecastData) => {
     $("#forecast-cards").append(forecastCard); // Append each forecast card to the forecast-cards element
   });
 };
+let searchedCities = [];
+
+const getCityForecast = (cityName) => {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      const lat = data.coord.lat;
+      const lon = data.coord.lon;
+      getForecast(lat, lon);
+    })
+    .catch((error) =>
+      console.error("Error fetching city forecast data:", error)
+    );
+};
+
+const displaySearchHistory = () => {
+  const searchHistoryElement = $("#search-history");
+  searchHistoryElement.empty(); // Clear existing search history
+
+  searchedCities.forEach((city) => {
+    const cityElement = $(`<div class="searched-city">${city}</div>`);
+    cityElement.on("click", () => {
+      getCityForecast(city); // Fetch and display weather data for the clicked city
+    });
+    searchHistoryElement.append(cityElement);
+  });
+};
+
+// Example usage: Add a city to the search history
+searchedCities.push("New York");
+searchedCities.push("London");
+displaySearchHistory(); // Display the search history with clickable city names
