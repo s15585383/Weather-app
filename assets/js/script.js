@@ -1,5 +1,6 @@
-const apiKey = "16d312da0b595bc0e8794d97eaaf3c2a";
-const baseUrl = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}`;
+const apiKey = "bfbd4cc44a5e7d0b7b18e693777f0e45";
+const baseUrl =
+  "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}";
 
 const searchCityInput = $("#city-search"); // Select the search input element
 const searchCityBtn = $("#search-btn"); // Select the search button element
@@ -16,7 +17,7 @@ const searchCity = () => {
     alert("Please enter a city name");
     return;
   }
-
+  console.log(`${baseUrl}?q=${cityName}&appid=${apiKey}`);
   fetch(`${baseUrl}?q=${cityName}&appid=${apiKey}`)
     .then((response) => {
       if (!response.ok) {
@@ -30,6 +31,17 @@ const searchCity = () => {
       getForecast(data.coord.lat, data.coord.lon);
     })
     .catch((error) => console.error("Error fetching weather data:", error));
+
+  // Display the city on the page
+  const cityList = document.getElementById("cityList");
+  const cityItem = document.createElement("li");
+  cityItem.textContent = cityName;
+  cityList.appendChild(cityItem);
+
+  // Store the city in local storage
+  let cities = JSON.parse(localStorage.getItem("cities")) || [];
+  cities.push(cityName);
+  localStorage.setItem("cities", JSON.stringify(cities));
 };
 
 searchCityBtn.on("click", (event) => {
@@ -37,6 +49,7 @@ searchCityBtn.on("click", (event) => {
 
   const cityName = searchCityInput.val().trim();
   searchCity(cityName);
+  console.log(cityName);
 });
 
 const updateCurrentWeather = (data) => {
