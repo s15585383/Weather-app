@@ -167,6 +167,22 @@ const displaySearchHistory = () => {
 };
 
 // Example usage: Add a city to the search history
+searchedCities.push("Paris");
 searchedCities.push("New York");
 searchedCities.push("London");
 displaySearchHistory(); // Display the search history with clickable city names
+
+function handleCityButtonClick(event) {
+  // Get the city name from the clicked button
+  const cityName = event.target.innerText;
+
+  // Perform actions based on the clicked city, such as displaying more information
+  console.log(`City button clicked: ${cityName}`);
+}
+
+// Add event listeners to each city button
+const cityButtons = document.querySelectorAll(".city-btn");
+
+cityButtons.forEach((button) => {
+  button.addEventListener("click", handleCityButtonClick);
+});
